@@ -220,7 +220,110 @@
   }
 }
 
-</style></head><body><div id="hud"><div id="brand">☕ NORTHLEFTCHEF<br><small style="color:white">VIRTUAL CAFÉ 001</small></div><div id="tools"><button id="radio">▶ RADIO</button><button id="sound">🔊 70%</button><button id="help">? HELP</button></div></div><div id="message"></div><div id="crosshair">+</div><div id="hint">Click to explore • WASD move • Mouse look • E interact • Tap objects on touchscreens</div><div id="mobile"><span class="blank"></span><button data-move="forward">▲</button><span class="blank"></span><button data-move="left">◀</button><button data-move="back">▼</button><button data-move="right">▶</button></div><div id="panel"><h2 id="panelTitle"></h2><p id="panelText"></p><div class="row" id="panelActions"></div><p><button id="close">CLOSE ✕</button></p></div>
+
+/* NLC_MOBILE_003_5 */
+
+#brand { display:none !important; }
+
+#hud {
+  position:fixed;
+  top:calc(10px + env(safe-area-inset-top));
+  right:10px;
+  left:auto;
+  width:auto;
+  z-index:40;
+}
+
+#tools {
+  display:none;
+  position:fixed;
+  top:calc(60px + env(safe-area-inset-top));
+  right:10px;
+  width:min(240px,85vw);
+  padding:12px;
+  border:1px solid #1bfd9c;
+  border-radius:18px;
+  background:#06120ff2;
+  flex-direction:column;
+  gap:8px;
+  z-index:45;
+}
+
+#tools.nlc-menu-open {
+  display:flex;
+}
+
+#tools button {
+  width:100%;
+  text-align:left;
+  min-height:42px;
+}
+
+#nlcMenuButton {
+  position:fixed;
+  top:calc(10px + env(safe-area-inset-top));
+  right:10px;
+  z-index:50;
+  width:44px;
+  height:44px;
+  min-height:44px;
+  padding:0;
+  border-radius:14px;
+  background:#06170fe8;
+  font-size:22px;
+}
+
+#tools #nlcSettingsButton {
+  display:block;
+  position:static;
+  width:100%;
+  height:auto;
+  text-align:left;
+  font-size:13px;
+  border-radius:12px;
+}
+
+#nlcConsoleToggle {
+  width:44px;
+  height:44px;
+  min-height:44px;
+  padding:0;
+  overflow:hidden;
+  font-size:0;
+  border-radius:50%;
+  right:calc(12px + env(safe-area-inset-right));
+  bottom:calc(12px + env(safe-area-inset-bottom));
+}
+
+#nlcConsoleToggle::before {
+  content:'🎮';
+  font-size:20px;
+}
+
+#nlcMove {
+  left:calc(12px + env(safe-area-inset-left));
+}
+
+#nlcLook {
+  right:calc(12px + env(safe-area-inset-right));
+}
+
+@media(pointer:coarse) and (orientation:landscape) {
+  .nlc-game-buttons {
+    right:calc(135px * var(--nlc-control-scale));
+    bottom:calc(45px + env(safe-area-inset-bottom));
+  }
+
+  #nlcMove,#nlcLook {
+    bottom:calc(15px + env(safe-area-inset-bottom));
+  }
+}
+
+</style></head><body><div id="hud"><div id="brand">☕ NORTHLEFTCHEF<br><small style="color:white">VIRTUAL CAFÉ 001</small></div><div id="tools"><button id="radio">▶ RADIO</button><button id="sound">🔊 70%</button><button id="help">? HELP</button></div></div>
+<button id="nlcMenuButton" type="button"
+        aria-label="Open NorthLeftChef menu"
+        aria-expanded="false">☰</button>
+<div id="message"></div><div id="crosshair">+</div><div id="hint">Click to explore • WASD move • Mouse look • E interact • Tap objects on touchscreens</div><div id="mobile"><span class="blank"></span><button data-move="forward">▲</button><span class="blank"></span><button data-move="left">◀</button><button data-move="back">▼</button><button data-move="right">▶</button></div><div id="panel"><h2 id="panelTitle"></h2><p id="panelText"></p><div class="row" id="panelActions"></div><p><button id="close">CLOSE ✕</button></p></div>
 <div id="nlcConsole" hidden aria-label="1AGE Console">
     <div id="nlcMove" class="nlc-stick" data-axis="move">
         <span class="nlc-knob"></span>
@@ -711,6 +814,28 @@ document.getElementById('nlcSettingsClose')
   });
 
 nlcApplyPreferences();
+
+// NLC_MOBILE_003_5 — Compact interface
+const nlcMenuButton = document.getElementById('nlcMenuButton');
+const nlcTools = document.getElementById('tools');
+
+function nlcCloseMenu() {
+  nlcTools.classList.remove('nlc-menu-open');
+  nlcMenuButton.setAttribute('aria-expanded', 'false');
+}
+
+nlcMenuButton.addEventListener('click', () => {
+  const open = nlcTools.classList.toggle('nlc-menu-open');
+  nlcMenuButton.setAttribute('aria-expanded', String(open));
+});
+
+for (const button of nlcTools.querySelectorAll('button')) {
+  button.addEventListener('click', nlcCloseMenu);
+}
+
+// Move the existing settings button into the menu.
+nlcTools.appendChild(document.getElementById('nlcSettingsButton'));
+
 
 
 document.addEventListener('keydown',e=>{
