@@ -414,6 +414,44 @@
     }
 }
 
+
+/* NLC_MOBILE_003_7 — Gamepad controls at bottom */
+
+/* Portrait: controls at the bottom */
+@media (pointer: coarse) and (orientation: portrait) {
+    #nlcMove,
+    #nlcLook {
+        bottom: calc(12px + env(safe-area-inset-bottom)) !important;
+    }
+
+    .nlc-game-buttons {
+        bottom: calc(18px + env(safe-area-inset-bottom)) !important;
+    }
+
+    #nlcConsoleToggle {
+        right: calc(12px + env(safe-area-inset-right)) !important;
+        bottom: calc(145px + env(safe-area-inset-bottom)) !important;
+    }
+}
+
+/* Landscape: controls along the bottom edge */
+@media (pointer: coarse) and (orientation: landscape) {
+    #nlcMove,
+    #nlcLook {
+        bottom: calc(8px + env(safe-area-inset-bottom)) !important;
+    }
+
+    .nlc-game-buttons {
+        right: calc(110px + env(safe-area-inset-right)) !important;
+        bottom: calc(10px + env(safe-area-inset-bottom)) !important;
+    }
+
+    #nlcConsoleToggle {
+        right: calc(12px + env(safe-area-inset-right)) !important;
+        bottom: calc(115px + env(safe-area-inset-bottom)) !important;
+    }
+}
+
 </style></head><body><div id="hud"><div id="brand">☕ NORTHLEFTCHEF<br><small style="color:white">VIRTUAL CAFÉ 001</small></div><div id="tools"><button id="radio">▶ RADIO</button><button id="sound">🔊 70%</button><button id="help">? HELP</button></div></div>
 <button id="nlcMenuButton" type="button"
         aria-label="Open NorthLeftChef menu"
