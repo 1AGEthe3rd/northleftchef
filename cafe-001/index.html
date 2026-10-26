@@ -319,6 +319,101 @@
   }
 }
 
+
+/* NLC_MOBILE_003_6 — Refined mobile gamepad */
+
+#nlcMenuButton {
+    width: 46px;
+    height: 46px;
+    min-height: 46px;
+    border-radius: 50%;
+    padding: 0;
+    background: #06170fee;
+    border: 2px solid #1bfd9c;
+    color: white;
+    transition: background .18s ease, color .18s ease;
+}
+
+#nlcMenuButton[aria-expanded="true"] {
+    background: #1bfd9c;
+    color: #03110a;
+}
+
+/* Smaller visible joystick circles */
+.nlc-stick {
+    width: calc(85px * var(--nlc-control-scale));
+    height: calc(85px * var(--nlc-control-scale));
+}
+
+/* Keep the inner indicator at a useful size */
+.nlc-knob {
+    width: 43px;
+    height: 43px;
+}
+
+/* Compact gamepad toggle */
+#nlcConsoleToggle {
+    position: fixed;
+    width: 42px;
+    height: 42px;
+    min-height: 42px;
+    border-radius: 50%;
+    padding: 0;
+    right: calc(10px + env(safe-area-inset-right));
+    bottom: calc(4px + env(safe-area-inset-bottom));
+    z-index: 35;
+}
+
+/* Portrait layout */
+@media (pointer: coarse) and (orientation: portrait) {
+
+    #nlcMove {
+        left: calc(12px + env(safe-area-inset-left));
+        bottom: calc(65px + env(safe-area-inset-bottom));
+    }
+
+    #nlcLook {
+        right: calc(12px + env(safe-area-inset-right));
+        bottom: calc(65px + env(safe-area-inset-bottom));
+    }
+
+    .nlc-game-buttons {
+        right: calc(110px * var(--nlc-control-scale));
+        bottom: calc(85px + env(safe-area-inset-bottom));
+    }
+}
+
+/* Landscape layout */
+@media (pointer: coarse) and (orientation: landscape) {
+
+    #nlcMove {
+        left: calc(12px + env(safe-area-inset-left));
+        bottom: calc(18px + env(safe-area-inset-bottom));
+    }
+
+    #nlcLook {
+        right: calc(12px + env(safe-area-inset-right));
+        bottom: calc(18px + env(safe-area-inset-bottom));
+    }
+
+    .nlc-game-buttons {
+        position: absolute;
+        right: calc(110px * var(--nlc-control-scale));
+        bottom: calc(30px + env(safe-area-inset-bottom));
+        gap: 5px;
+    }
+
+    .nlc-game-buttons button {
+        width: calc(38px * var(--nlc-control-scale));
+        height: calc(38px * var(--nlc-control-scale));
+        font-size: 12px;
+    }
+
+    #nlcConsoleToggle {
+        bottom: calc(3px + env(safe-area-inset-bottom));
+    }
+}
+
 </style></head><body><div id="hud"><div id="brand">☕ NORTHLEFTCHEF<br><small style="color:white">VIRTUAL CAFÉ 001</small></div><div id="tools"><button id="radio">▶ RADIO</button><button id="sound">🔊 70%</button><button id="help">? HELP</button></div></div>
 <button id="nlcMenuButton" type="button"
         aria-label="Open NorthLeftChef menu"
