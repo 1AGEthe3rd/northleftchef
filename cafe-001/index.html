@@ -1,4 +1,4 @@
-<!doctype html><html lang="en"><head><meta charset="utf-8"><meta name="viewport" content="width=device-width,initial-scale=1"><title>NorthLeftChef • Virtual Café 001</title><style>
+<!doctype html><html lang="en"><head><meta charset="utf-8"><meta name="viewport" content="width=device-width,initial-scale=1,viewport-fit=cover"><title>NorthLeftChef • Virtual Café 001</title><style>
 *{box-sizing:border-box}html,body{margin:0;width:100%;height:100%;overflow:hidden;background:#000;color:#fff;font:600 16px system-ui,sans-serif}canvas{display:block}button,a{font:inherit}button{cursor:pointer;border:2px solid #1bfd9c;border-radius:24px;background:#06170f;color:white;padding:12px 18px;min-height:52px}button:active{background:#1bfd9c;color:#000}#hud{position:fixed;top:12px;left:12px;right:12px;display:flex;justify-content:space-between;gap:8px;align-items:flex-start;pointer-events:none}#hud>*{pointer-events:auto}#brand{background:#000d;border:1px solid #1bfd9c;border-radius:18px;padding:12px 16px;color:#1bfd9c;font-size:19px}#tools{display:flex;flex-wrap:wrap;justify-content:end;gap:7px}#tools button{padding:8px 12px;min-height:44px;background:#000d}#hint{position:fixed;bottom:16px;left:50%;transform:translateX(-50%);background:#000e;border:1px solid #1bfd9c;border-radius:18px;padding:10px 16px;text-align:center;max-width:92vw}#crosshair{position:fixed;top:50%;left:50%;transform:translate(-50%,-50%);font-size:24px;pointer-events:none;color:#1bfd9c}#panel{display:none;position:fixed;inset:auto 12px 80px 12px;margin:auto;max-width:480px;background:#050b09f5;border:2px solid #1bfd9c;border-radius:24px;padding:20px;box-shadow:0 0 50px #1bfd9c44}#panel h2{margin:0 0 10px}#panel p{line-height:1.45}#panel .row{display:flex;flex-wrap:wrap;gap:10px}#panel a{display:inline-block;border:2px solid #1bfd9c;border-radius:20px;padding:12px 16px;color:white;text-decoration:none;background:#063321}#panel input{max-width:100%}#mobile{position:fixed;bottom:90px;left:12px;display:none;grid-template-columns:repeat(3,60px);gap:5px}#mobile button{border-radius:18px;min-height:56px;padding:0}#mobile .blank{visibility:hidden}#message{position:fixed;top:85px;left:50%;transform:translateX(-50%);background:#000e;border-radius:16px;padding:8px 15px;display:none;text-align:center}@media(pointer:coarse){#mobile{display:grid}#hint{font-size:13px;bottom:10px}#brand{font-size:15px;padding:9px}#tools button{font-size:13px}#panel{bottom:170px}}
 
 /* NLC_CONSOLE_001 */
@@ -452,11 +452,111 @@
     }
 }
 
+
+/* NLC_BUILD_004_UNIVERSAL */
+#nlcMenuButton {
+    border-radius:50%;
+}
+#nlcMenuButton[aria-expanded="true"] {
+    background:#1bfd9c;
+    color:#03110a;
+}
+#nlcInteract {
+    position:fixed;
+    z-index:38;
+    left:50%;
+    bottom:calc(135px + env(safe-area-inset-bottom));
+    transform:translateX(-50%);
+    min-height:44px;
+    max-width:58vw;
+    padding:8px 14px;
+    font-size:13px;
+    background:#063b27ef;
+}
+#nlcInteract[hidden] {
+    display:none!important;
+}
+#nlcControllerStatus {
+    position:fixed;
+    left:12px;
+    top:calc(12px + env(safe-area-inset-top));
+    z-index:32;
+    font-size:11px;
+    color:#1bfd9c;
+    background:#06170fbb;
+    padding:6px 9px;
+    border-radius:12px;
+    pointer-events:none;
+}
+.nlc-stick {
+    width:calc(88px * var(--nlc-control-scale));
+    height:calc(88px * var(--nlc-control-scale));
+    bottom:calc(12px + env(safe-area-inset-bottom))!important;
+}
+.nlc-knob {
+    width:43px;
+    height:43px;
+}
+#nlcMove {
+    left:calc(12px + env(safe-area-inset-left));
+}
+#nlcLook {
+    right:calc(12px + env(safe-area-inset-right));
+}
+.nlc-game-buttons {
+    right:calc(116px + env(safe-area-inset-right))!important;
+    bottom:calc(15px + env(safe-area-inset-bottom))!important;
+    gap:5px;
+    grid-template-columns:repeat(
+        2,calc(38px * var(--nlc-control-scale))
+    );
+}
+.nlc-game-buttons button {
+    width:calc(38px * var(--nlc-control-scale));
+    height:calc(38px * var(--nlc-control-scale));
+    min-height:0;
+    font-size:12px;
+}
+#nlcConsoleToggle {
+    right:calc(12px + env(safe-area-inset-right))!important;
+    bottom:calc(125px + env(safe-area-inset-bottom))!important;
+    z-index:45;
+    width:44px;
+    height:44px;
+    border-radius:50%;
+}
+@media(pointer:fine) {
+    #nlcInteract {
+        bottom:calc(135px + env(safe-area-inset-bottom));
+    }
+}
+@media(pointer:coarse) and (orientation:landscape) {
+    .nlc-stick {
+        bottom:calc(7px + env(safe-area-inset-bottom))!important;
+    }
+    .nlc-game-buttons {
+        right:calc(113px + env(safe-area-inset-right))!important;
+        bottom:calc(8px + env(safe-area-inset-bottom))!important;
+    }
+    #nlcConsoleToggle {
+        bottom:calc(104px + env(safe-area-inset-bottom))!important;
+    }
+    #nlcInteract {
+        bottom:calc(8px + env(safe-area-inset-bottom));
+    }
+}
+
 </style></head><body><div id="hud"><div id="brand">☕ NORTHLEFTCHEF<br><small style="color:white">VIRTUAL CAFÉ 001</small></div><div id="tools"><button id="radio">▶ RADIO</button><button id="sound">🔊 70%</button><button id="help">? HELP</button></div></div>
 <button id="nlcMenuButton" type="button"
         aria-label="Open NorthLeftChef menu"
         aria-expanded="false">☰</button>
 <div id="message"></div><div id="crosshair">+</div><div id="hint">Click to explore • WASD move • Mouse look • E interact • Tap objects on touchscreens</div><div id="mobile"><span class="blank"></span><button data-move="forward">▲</button><span class="blank"></span><button data-move="left">◀</button><button data-move="back">▼</button><button data-move="right">▶</button></div><div id="panel"><h2 id="panelTitle"></h2><p id="panelText"></p><div class="row" id="panelActions"></div><p><button id="close">CLOSE ✕</button></p></div>
+<button id="nlcInteract" type="button" hidden>
+INTERACT
+</button>
+<div id="nlcControllerStatus" aria-live="polite">
+🎮 Controller: not connected
+</div>
 <div id="nlcConsole" hidden aria-label="1AGE Console">
     <div id="nlcMove" class="nlc-stick" data-axis="move">
         <span class="nlc-knob"></span>
@@ -850,7 +950,63 @@ label('STUDIO 007',7.5,2.7,-4.5,'#ffffff',45);
 const ray=new THREE.Raycaster(),pointer=new THREE.Vector2();let yaw=0,pitch=0,keys={},moveTouch={forward:false,back:false,left:false,right:false},panelOpen=false;const panel=document.getElementById('panel'),actions=document.getElementById('panelActions');
 function show(t){panelOpen=true;document.exitPointerLock?.();panel.style.display='block';document.getElementById('panelTitle').textContent=t.name;document.getElementById('panelText').textContent=t.info;actions.replaceChildren();if(t.action==='studio'||t.action==='dj'){const a=document.createElement('a');a.href=t.action==='studio'?'../studio-007/':'../studio-008/dj.html';a.target='_blank';a.rel='noopener';a.textContent=t.action==='studio'?'🎹 OPEN STUDIO':'🎧 OPEN DJ BOOTH';actions.append(a)}if(t.action==='radio'){const b=document.createElement('button');b.textContent='🎵 CHOOSE AUDIO FILE';b.onclick=()=>file.click();actions.append(b)}}
 document.getElementById('close').onclick=()=>{panel.style.display='none';panelOpen=false};
-function pick(){ray.setFromCamera(pointer,camera);const hits=ray.intersectObjects(targets,false);if(hits.length&&hits[0].distance<6)show(hits[0].object.userData)}
+
+function nlcNearbyDoor(){
+    return Math.abs(camera.position.x)<2.0 &&
+           Math.abs(camera.position.z)<2.2;
+}
+function nlcFacingTarget(){
+    pointer.set(0,0);
+    ray.setFromCamera(pointer,camera);
+    const hits=ray.intersectObjects(targets,false);
+    return hits.length && hits[0].distance<6
+        ? hits[0].object.userData : null;
+}
+// NLC_BUILD_004_DOOR_ENTER
+function nlcContext(){
+    if(nlcNearbyDoor()){
+        return {
+            label:nlcDoorOpen?'🚪 CLOSE DOOR':'🚪 OPEN DOOR',
+            door:true
+        };
+    }
+    const t=nlcFacingTarget();
+    if(t){
+        return {
+            label:t.action==='studio'?'🎹 MAKE BEATS':
+                  t.action==='dj'?'🎧 USE DJ DECKS':
+                  t.action==='radio'?'🎵 USE RADIO':
+                  '☕ CAFÉ COUNTER',
+            target:t
+        };
+    }
+    if(nlcNearbyDoor()){
+        return {
+            label:nlcDoorOpen?'🚪 CLOSE DOOR':'🚪 OPEN DOOR',
+            door:true
+        };
+    }
+    return null;
+}
+function nlcInteractNow(){
+    if(panelOpen)return;
+    const context=nlcContext();
+    if(!context)return;
+    if(context.door)toggleNLCInteriorDoor();
+    else show(context.target);
+}
+function pick(){
+    const t=nlcFacingTarget();
+    if(t)show(t);
+}
+const nlcInteractButton=document.getElementById('nlcInteract');
+nlcInteractButton.addEventListener('click',nlcInteractNow);
+function nlcUpdateInteract(){
+    const context=panelOpen?null:nlcContext();
+    nlcInteractButton.hidden=!context;
+    if(context)nlcInteractButton.textContent=context.label;
+}
+
 renderer.domElement.addEventListener('click',e=>{if(panelOpen)return;if(matchMedia('(pointer:coarse)').matches){pointer.x=e.clientX/innerWidth*2-1;pointer.y=-(e.clientY/innerHeight)*2+1;pick()}else if(document.pointerLockElement!==renderer.domElement){renderer.domElement.requestPointerLock()}else{pointer.set(0,0);pick()}});
 document.addEventListener('mousemove',e=>{if(document.pointerLockElement===renderer.domElement&&!panelOpen){yaw-=e.movementX*.0025;pitch=Math.max(-1.25,Math.min(1.25,pitch-e.movementY*.0025))}});
 
@@ -862,7 +1018,10 @@ document.addEventListener('keydown',e=>{
     }
 });
 
-document.addEventListener('keydown',e=>{if(['KeyW','KeyA','KeyS','KeyD','ArrowUp','ArrowDown','ArrowLeft','ArrowRight','KeyE'].includes(e.code))e.preventDefault();keys[e.code]=true;if(e.code==='KeyE'&&!panelOpen){pointer.set(0,0);pick()}if(e.code==='Escape'&&panelOpen)document.getElementById('close').click()});document.addEventListener('keyup',e=>keys[e.code]=false);
+document.addEventListener('keydown',e=>{if(['KeyW','KeyA','KeyS','KeyD','ArrowUp','ArrowDown','ArrowLeft','ArrowRight','KeyE'].includes(e.code))e.preventDefault();keys[e.code]=true;if((e.code==='KeyE'||e.code==='Enter')&&!e.repeat&&!panelOpen){
+    e.preventDefault();
+    nlcInteractNow();
+}if(e.code==='Escape'&&panelOpen)document.getElementById('close').click()});document.addEventListener('keyup',e=>keys[e.code]=false);
 for(const b of document.querySelectorAll('[data-move]')){const k=b.dataset.move;b.addEventListener('pointerdown',e=>{e.preventDefault();moveTouch[k]=true;b.setPointerCapture(e.pointerId)});for(const ev of ['pointerup','pointercancel'])b.addEventListener(ev,()=>moveTouch[k]=false)}
 let dragging=false,lastX=0,lastY=0;renderer.domElement.addEventListener('touchstart',e=>{if(e.touches.length===1){dragging=true;lastX=e.touches[0].clientX;lastY=e.touches[0].clientY}},{passive:true});renderer.domElement.addEventListener('touchmove',e=>{if(dragging&&e.touches.length===1){const t=e.touches[0];yaw-=(t.clientX-lastX)*.005;pitch=Math.max(-1.25,Math.min(1.25,pitch-(t.clientY-lastY)*.005));lastX=t.clientX;lastY=t.clientY}},{passive:true});renderer.domElement.addEventListener('touchend',()=>dragging=false);
 const file=document.createElement('input');file.type='file';file.accept='audio/*';file.style.display='none';document.body.append(file);const audio=document.getElementById('player');let objectURL=null;file.onchange=()=>{const f=file.files[0];if(!f)return;if(objectURL)URL.revokeObjectURL(objectURL);objectURL=URL.createObjectURL(f);audio.src=objectURL;audio.play().then(()=>document.getElementById('radio').textContent='❚❚ RADIO').catch(()=>{});document.getElementById('panelText').textContent='Playing locally: '+f.name+' (not broadcast to other visitors).'};
@@ -1039,7 +1198,7 @@ function nlcReadControls(dt){
     let my=nlcPad.move.y;
     let lx=nlcPad.look.x;
     let ly=nlcPad.look.y;
-    let interact=!!nlcPad.buttons.X;
+    let interact=!!nlcPad.buttons.A || !!nlcPad.buttons.X;
     let sprint=!!nlcPad.buttons.B;
 
     const pad=[...(navigator.getGamepads?.()||[])]
@@ -1051,9 +1210,29 @@ function nlcReadControls(dt){
         my+=dead(pad.axes[1]||0);
         lx+=dead(pad.axes[2]||0);
         ly+=dead(pad.axes[3]||0);
-        interact=interact||!!pad.buttons[2]?.pressed;
+        interact=interact||!!pad.buttons[0]?.pressed;
         sprint=sprint||!!pad.buttons[1]?.pressed;
     }
+
+    const status=document.getElementById('nlcControllerStatus');
+    const statusText=pad
+        ?'🎮 Controller connected'
+        :'🎮 Controller: not connected';
+    if(status.textContent!==statusText)
+        status.textContent=statusText;
+
+    const options=!!pad?.buttons[9]?.pressed;
+    const cancel=!!pad?.buttons[1]?.pressed ||
+                 !!nlcPad.buttons.B;
+
+    if(options&&!nlcPad.previousOptions)
+        nlcMenuButton.click();
+
+    if(cancel&&!nlcPad.previousCancel&&panelOpen)
+        document.getElementById('close').click();
+
+    nlcPad.previousOptions=options;
+    nlcPad.previousCancel=cancel;
 
     mx=Math.max(-1,Math.min(1,mx));
     my=Math.max(-1,Math.min(1,my));
@@ -1066,8 +1245,7 @@ function nlcReadControls(dt){
     }
 
     if(interact&&!nlcPad.previousX&&!panelOpen){
-        pointer.set(0,0);
-        pick();
+        nlcInteractNow();
     }
 
     nlcPad.previousX=interact;
@@ -1092,6 +1270,6 @@ if (!Number.isFinite(camera.position.x) ||
   camera.position.set(-7,1.65,3);
 }if(!panelOpen){const fw=Number(keys.KeyW||keys.ArrowUp||moveTouch.forward)-Number(keys.KeyS||keys.ArrowDown||moveTouch.back),side=Number(keys.KeyD||keys.ArrowRight||moveTouch.right)-Number(keys.KeyA||keys.ArrowLeft||moveTouch.left);const speed=(keys.ShiftLeft||keys.ShiftRight||nlcInput.sprint?6:4.2)*dt;
 const combinedForward=Math.max(-1,Math.min(1,fw+nlcInput.forward));
-const combinedSide=Math.max(-1,Math.min(1,side+nlcInput.side));let dx=(Math.sin(yaw)*-combinedForward+Math.cos(yaw)*combinedSide)*speed,dz=(-Math.cos(yaw)*combinedForward-Math.sin(yaw)*combinedSide)*speed;const nx=camera.position.x+dx,nz=camera.position.z+dz;const nearWall=Math.abs(nx)<.35&&(Math.abs(nz)>1.05||!nlcDoorOpen);if(!nearWall){camera.position.x=Math.max(-14.5,Math.min(14.5,nx));camera.position.z=Math.max(-6.5,Math.min(6.5,nz))}}updateDJScreen(performance.now()/1000);renderer.render(scene,camera);
+const combinedSide=Math.max(-1,Math.min(1,side+nlcInput.side));let dx=(Math.sin(yaw)*-combinedForward+Math.cos(yaw)*combinedSide)*speed,dz=(-Math.cos(yaw)*combinedForward-Math.sin(yaw)*combinedSide)*speed;const nx=camera.position.x+dx,nz=camera.position.z+dz;const nearWall=Math.abs(nx)<.35&&(Math.abs(nz)>1.05||!nlcDoorOpen);if(!nearWall){camera.position.x=Math.max(-14.5,Math.min(14.5,nx));camera.position.z=Math.max(-6.5,Math.min(6.5,nz))}}nlcUpdateInteract();updateDJScreen(performance.now()/1000);renderer.render(scene,camera);
 }animate();addEventListener('resize',()=>{camera.aspect=innerWidth/innerHeight;camera.updateProjectionMatrix();renderer.setSize(innerWidth,innerHeight)});
 </script></body></html>
