@@ -17,6 +17,7 @@ export function buildGenevaStorefront(THREE, scene, { box, mat, label }, doors) 
   box(14.7,1.64,z,.55,3.28,.40,red);
   box(0,1.64,z,.58,3.28,.39,offWhite);
   const glassFloor = .22;
+  const storefrontRail = mat('#914b37'); // rust-red mid-rail visible in the leasing photographs
   for (const door of doors) {
     const left = door.id === 'cafe' ? -14.4 : .30;
     const right = door.id === 'cafe' ? -.30 : 14.4;
@@ -29,11 +30,13 @@ export function buildGenevaStorefront(THREE, scene, { box, mat, label }, doors) 
       for (let bay=0; bay<=3; bay++) {
         box(start+width*bay/3,1.70,z-.04,.076,3.08,.14,frame);
       }
-      for (const y of [glassFloor,1.10,2.62,3.24]) box(center,y,z-.04,width,.079,.14,frame);
+      for (const y of [glassFloor,3.24]) box(center,y,z-.04,width,.079,.14,frame);
+      box(center,1.10,z-.048,width,.15,.15,storefrontRail);
       for (let bar=1; bar<9; bar++) box(start+width*bar/9,.64,z-.087,.035,.86,.045,frame);
     }
     box(door.x,1.49,z,2.10,2.91,.045,glass);
     box(door.x,3.09,z,2.16,.49,.042,glass);
+    for (const edge of [-1,1]) box(door.x+edge*1.08,1.68,z-.065,.095,3.15,.16,frame);
     for (const y of [.14,1.16,2.83,3.25]) box(door.x,y,z-.053,2.15,.098,.17,frame);
     box(door.x+.73,1.38,z-.15,.09,.35,.09,frame);
     label('EXIT',door.x,3.16,z-.22,'#826239',46,Math.PI);
