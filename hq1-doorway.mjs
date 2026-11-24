@@ -21,3 +21,13 @@ export function arrivalDoor(search) {
   if (query.get('from') !== 'hq1' || query.get('venue') !== 'hq1-northleftchef') return null;
   return parkingDoors.find(door => door.id === query.get('door')) ?? parkingDoors[0];
 }
+
+// The movement boundary is also the wall clamp. Using a higher threshold
+ // can strand players at high frame rates or on slow analog input.
+export const FRONT_LIMIT = 6.5;
+export function crossedParkingDoor(x, z, nx, nz) {
+  if (![x,z,nx,nz].every(Number.isFinite) || nz <= z || z > FRONT_LIMIT || nz < FRONT_LIMIT) return null;
+  const t = (FRONT_LIMIT-z)/(nz-z);
+  const crossingX = x+(nx-x)*t;
+  return parkingDoors.find(door => Math.abs(crossingX-door.x) <= .93) ?? null;
+}
