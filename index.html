@@ -595,12 +595,16 @@ INTERACT
 
 <audio id="player" loop></audio><script type="module">
 import * as THREE from './vendor/three.module.js';
-const scene=new THREE.Scene();scene.background=new THREE.Color('#030504');scene.fog=new THREE.Fog('#030504',22,52);
+import { arrivalDoor, parkingDoorAt, parkingDoors, parkingUrl } from './hq1-doorway.mjs';
+import { addInteriorFinish, buildGenevaStorefront } from './geneva-knauls.mjs';
+const scene=new THREE.Scene();scene.background=new THREE.Color('#a8b9c2');scene.fog=new THREE.Fog('#a8b9c2',36,68);
 const camera=new THREE.PerspectiveCamera(74,innerWidth/innerHeight,.08,100);camera.position.set(-7,1.65,3);camera.rotation.order='YXZ';
+const entryDoor=arrivalDoor(location.search);
+if(entryDoor)camera.position.set(entryDoor.x,1.65,5.8);
 const renderer=new THREE.WebGLRenderer({antialias:true});renderer.setSize(innerWidth,innerHeight);renderer.setPixelRatio(Math.min(devicePixelRatio,2));renderer.shadowMap.enabled=true;document.body.prepend(renderer.domElement);
-const nlcHemisphere=new THREE.HemisphereLight(0xffd7a0,0x302015,1.1);
+const nlcHemisphere=new THREE.HemisphereLight(0xf7e5ce,0x655b4d,1.36);
 scene.add(nlcHemisphere);
-const nlcAmbient=new THREE.AmbientLight(0xffc58a,.45);
+const nlcAmbient=new THREE.AmbientLight(0xeedacd,.56);
 scene.add(nlcAmbient);
 function light(x,y,z,color,intensity,dist){const l=new THREE.PointLight(color,intensity,dist);l.position.set(x,y,z);scene.add(l)}light(-4,3,1,0xffc88a,25,13);light(5,3,-2,0x1bfd9c,18,11);light(2,3,-12,0xbb40ff,26,12);light(-4,3,-15,0x3399ff,20,12);
 function mat(color,emissive='#000000',strength=0){return new THREE.MeshStandardMaterial({color,roughness:.7,emissive,emissiveIntensity:strength,side:THREE.DoubleSide})}
@@ -614,130 +618,18 @@ function label(text,x,y,z,color='#ffffff',size=44,rot=0){const c=document.create
 // Left café (-15..0), right studio (0..15).
 // Parking lot faces z=+7. NE MLK faces x=-15.
 
-// Main floor and ceiling
+// Preserve the interior's playable proportions and adjacent café/studio rooms.
+const architecture = { box, mat, label };
+const offWhite = buildGenevaStorefront(THREE, scene, architecture, parkingDoors);
 box(0,-.13,0,30,.25,14,floor);
 box(0,4.12,0,30,.25,14,black);
-
-// Rear exterior wall
-box(0,2,-7,30,4.3,.25,dark);
-
-// Right exterior wall
-box(15,2,0,.25,4.3,14,dark);
-
-// NE MLK-facing short wall, with café side entrance
-box(-15,2,-4.5,.25,4.3,5,dark);
-box(-15,2,4.5,.25,4.3,5,dark);
-box(-15,3.65,0,.25,1,4,dark);
-
-// NLC_BUILD_003_3 — Acoustic studio partition
-// Two solid wall sections, with a central door opening.
-box(0,2,-4.1,.25,4.3,5.8,wood);
-box(0,2,4.1,.25,4.3,5.8,wood);
-box(0,3.65,0,.25,1,2.4,wood);
-
-// NLC_BUILD_003_1 — Corrected parking-lot façade
-// Solid wall segments exist ONLY between openings.
-
-const nlcEntryGlass=new THREE.MeshPhysicalMaterial({
-    color:0x85c9cf,
-    metalness:.05,
-    roughness:.12,
-    transparent:true,
-    opacity:.38,
-    side:THREE.DoubleSide
-});
-
-// Four windows and two doors, left to right.
-const nlcOpenings=[
-    {x:-12.2,w:2.4,type:'window'},
-    {x:-7.5,w:2.2,type:'door'},
-    {x:-3.2,w:2.4,type:'window'},
-    {x:3.2,w:2.4,type:'window'},
-    {x:8,w:2.2,type:'door'},
-    {x:12.2,w:2.4,type:'window'}
-];
-
-const openings=nlcOpenings.map(o=>({
-    ...o,
-    left:o.x-o.w/2,
-    right:o.x+o.w/2
-}));
-
-// Build solid wall only between openings.
-let previous=-15;
-
-for(const o of openings){
-    const width=o.left-previous;
-
-    if(width>.01){
-        box(previous+width/2,2,7,width,4.3,.25,wood);
-    }
-
-    previous=o.right;
-}
-
-if(previous<15){
-    const width=15-previous;
-    box(previous+width/2,2,7,width,4.3,.25,wood);
-}
-
-// Build openings, glass, and frames.
-for(const o of nlcOpenings){
-    const isDoor=o.type==='door';
-
-    const bottom=isDoor?0:1;
-    const height=isDoor?3:2.1;
-    const centerY=bottom+height/2;
-
-    // Lower wall under windows
-    if(!isDoor){
-        box(o.x,.5,7,o.w,1,.25,wood);
-    }
-
-    // Upper wall above opening
-    const top=bottom+height;
-    const upperHeight=4.15-top;
-
-    if(upperHeight>0){
-        box(o.x,top+upperHeight/2,7,o.w,upperHeight,.25,wood);
-    }
-
-    // Glass
-    box(o.x,centerY,7,o.w-.12,height-.08,.045,nlcEntryGlass);
-
-    // Vertical frame
-    for(const edge of [-1,1]){
-        box(
-            o.x+edge*o.w/2,
-            centerY,
-            6.86,
-            .11,
-            height,
-            .15,
-            dark
-        );
-    }
-
-    // Top frame
-    box(o.x,top,6.86,o.w,.11,.15,dark);
-
-    // Window sill
-    if(!isDoor){
-        box(o.x,bottom,6.86,o.w,.11,.18,wood);
-        box(o.x,centerY,6.84,.075,height,.12,dark);
-    }
-}
-
-// NE MLK side entrance remains on the short left wall.
-box(-15,1.5,0,.045,3,2.2,nlcEntryGlass);
-box(-14.86,3.05,0,.15,.11,2.3,dark);
-box(-14.86,1.5,-1.15,.15,3,.11,dark);
-box(-14.86,1.5,1.15,.15,3,.11,dark);
-
-// Signs
-label('NORTHLEFTCHEF',-7.5,3.7,6.7,'#1bfd9c',60,Math.PI);
-label('MUSIC STUDIO',8,3.7,6.7,'#ff62d9',54,Math.PI);
-
+box(0,2,-7,30,4.3,.25,offWhite);
+box(15,2,0,.25,4.3,14,offWhite);
+box(-15,2,0,.25,4.3,14,offWhite);
+box(0,2,-4.1,.25,4.3,5.8,offWhite);
+box(0,2,4.1,.25,4.3,5.8,offWhite);
+box(0,3.65,0,.25,1,2.4,offWhite);
+addInteriorFinish(THREE, scene, architecture);
 
 // Solid acoustic-style studio door
 const nlcDoorMaterial=mat('#202426');
@@ -964,6 +856,10 @@ function nlcFacingTarget(){
 }
 // NLC_BUILD_004_DOOR_ENTER
 function nlcContext(){
+    const parkingDoor=parkingDoorAt(camera.position.x,camera.position.z);
+    if(parkingDoor && Math.cos(yaw)<-.25){
+        return { label:'EXIT TO HQ1 PARKING', parkingDoor };
+    }
     if(nlcNearbyDoor()){
         return {
             label:nlcDoorOpen?'🚪 CLOSE DOOR':'🚪 OPEN DOOR',
@@ -992,7 +888,8 @@ function nlcInteractNow(){
     if(panelOpen)return;
     const context=nlcContext();
     if(!context)return;
-    if(context.door)toggleNLCInteriorDoor();
+    if(context.parkingDoor)location.assign(parkingUrl(context.parkingDoor.id));
+    else if(context.door)toggleNLCInteriorDoor();
     else show(context.target);
 }
 function pick(){
@@ -1270,6 +1167,8 @@ if (!Number.isFinite(camera.position.x) ||
   camera.position.set(-7,1.65,3);
 }if(!panelOpen){const fw=Number(keys.KeyW||keys.ArrowUp||moveTouch.forward)-Number(keys.KeyS||keys.ArrowDown||moveTouch.back),side=Number(keys.KeyD||keys.ArrowRight||moveTouch.right)-Number(keys.KeyA||keys.ArrowLeft||moveTouch.left);const speed=(keys.ShiftLeft||keys.ShiftRight||nlcInput.sprint?6:4.2)*dt;
 const combinedForward=Math.max(-1,Math.min(1,fw+nlcInput.forward));
-const combinedSide=Math.max(-1,Math.min(1,side+nlcInput.side));let dx=(Math.sin(yaw)*-combinedForward+Math.cos(yaw)*combinedSide)*speed,dz=(-Math.cos(yaw)*combinedForward-Math.sin(yaw)*combinedSide)*speed;const nx=camera.position.x+dx,nz=camera.position.z+dz;const nearWall=Math.abs(nx)<.35&&(Math.abs(nz)>1.05||!nlcDoorOpen);if(!nearWall){camera.position.x=Math.max(-14.5,Math.min(14.5,nx));camera.position.z=Math.max(-6.5,Math.min(6.5,nz))}}nlcUpdateInteract();updateDJScreen(performance.now()/1000);renderer.render(scene,camera);
+const combinedSide=Math.max(-1,Math.min(1,side+nlcInput.side));let dx=(Math.sin(yaw)*-combinedForward+Math.cos(yaw)*combinedSide)*speed,dz=(-Math.cos(yaw)*combinedForward-Math.sin(yaw)*combinedSide)*speed;const nx=camera.position.x+dx,nz=camera.position.z+dz;const crossedDoor = nz > 6.57 && dz > 0 ? parkingDoorAt(nx,6.57) : null;
+if (crossedDoor) { location.assign(parkingUrl(crossedDoor.id)); return; }
+const nearWall=Math.abs(nx)<.35&&(Math.abs(nz)>1.05||!nlcDoorOpen);if(!nearWall){camera.position.x=Math.max(-14.5,Math.min(14.5,nx));camera.position.z=Math.max(-6.5,Math.min(6.5,nz))}}nlcUpdateInteract();updateDJScreen(performance.now()/1000);renderer.render(scene,camera);
 }animate();addEventListener('resize',()=>{camera.aspect=innerWidth/innerHeight;camera.updateProjectionMatrix();renderer.setSize(innerWidth,innerHeight)});
 </script></body></html>
