@@ -595,7 +595,7 @@ INTERACT
 
 <audio id="player" loop></audio><script type="module">
 import * as THREE from './vendor/three.module.js';
-import { arrivalDoor, parkingDoorAt, parkingDoors, parkingUrl } from './hq1-doorway.mjs';
+import { arrivalDoor, crossedParkingDoor, FRONT_LIMIT, parkingDoorAt, parkingDoors, parkingUrl } from './hq1-doorway.mjs';
 import { addInteriorFinish, buildGenevaStorefront } from './geneva-knauls.mjs';
 const scene=new THREE.Scene();scene.background=new THREE.Color('#a8b9c2');scene.fog=new THREE.Fog('#a8b9c2',36,68);
 const camera=new THREE.PerspectiveCamera(74,innerWidth/innerHeight,.08,100);camera.position.set(-7,1.65,3);camera.rotation.order='YXZ';
@@ -1167,8 +1167,8 @@ if (!Number.isFinite(camera.position.x) ||
   camera.position.set(-7,1.65,3);
 }if(!panelOpen){const fw=Number(keys.KeyW||keys.ArrowUp||moveTouch.forward)-Number(keys.KeyS||keys.ArrowDown||moveTouch.back),side=Number(keys.KeyD||keys.ArrowRight||moveTouch.right)-Number(keys.KeyA||keys.ArrowLeft||moveTouch.left);const speed=(keys.ShiftLeft||keys.ShiftRight||nlcInput.sprint?6:4.2)*dt;
 const combinedForward=Math.max(-1,Math.min(1,fw+nlcInput.forward));
-const combinedSide=Math.max(-1,Math.min(1,side+nlcInput.side));let dx=(Math.sin(yaw)*-combinedForward+Math.cos(yaw)*combinedSide)*speed,dz=(-Math.cos(yaw)*combinedForward-Math.sin(yaw)*combinedSide)*speed;const nx=camera.position.x+dx,nz=camera.position.z+dz;const crossedDoor = nz > 6.57 && dz > 0 ? parkingDoorAt(nx,6.57) : null;
+const combinedSide=Math.max(-1,Math.min(1,side+nlcInput.side));let dx=(Math.sin(yaw)*-combinedForward+Math.cos(yaw)*combinedSide)*speed,dz=(-Math.cos(yaw)*combinedForward-Math.sin(yaw)*combinedSide)*speed;const nx=camera.position.x+dx,nz=camera.position.z+dz;const crossedDoor = crossedParkingDoor(camera.position.x,camera.position.z,nx,nz);
 if (crossedDoor) { location.assign(parkingUrl(crossedDoor.id)); return; }
-const nearWall=Math.abs(nx)<.35&&(Math.abs(nz)>1.05||!nlcDoorOpen);if(!nearWall){camera.position.x=Math.max(-14.5,Math.min(14.5,nx));camera.position.z=Math.max(-6.5,Math.min(6.5,nz))}}nlcUpdateInteract();updateDJScreen(performance.now()/1000);renderer.render(scene,camera);
+const nearWall=Math.abs(nx)<.35&&(Math.abs(nz)>1.05||!nlcDoorOpen);if(!nearWall){camera.position.x=Math.max(-14.5,Math.min(14.5,nx));camera.position.z=Math.max(-6.5,Math.min(FRONT_LIMIT,nz))}}nlcUpdateInteract();updateDJScreen(performance.now()/1000);renderer.render(scene,camera);
 }animate();addEventListener('resize',()=>{camera.aspect=innerWidth/innerHeight;camera.updateProjectionMatrix();renderer.setSize(innerWidth,innerHeight)});
 </script></body></html>
