@@ -546,17 +546,15 @@
     }
 }
 
-</style></head><body><div id="hud"><div id="brand">☕ NORTHLEFTCHEF<br><small style="color:white">VIRTUAL CAFÉ 001</small></div><div id="tools"><button id="radio">▶ RADIO</button><button id="sound">🔊 70%</button><button id="help">? HELP</button></div></div>
+</style></head><body><div id="hud"><div id="brand">☕ NORTHLEFTCHEF<br><small style="color:white">VIRTUAL CAFÉ 001</small></div><div id="tools"><button id="radio">▶ RADIO</button><button id="sound">🔊 70%</button></div></div>
 <button id="nlcMenuButton" type="button"
         aria-label="Open NorthLeftChef menu"
         aria-expanded="false">☰</button>
-<div id="message"></div><div id="crosshair">+</div><div id="hint">Click to explore • WASD move • Mouse look • E interact • Tap objects on touchscreens</div><div id="mobile"><span class="blank"></span><button data-move="forward">▲</button><span class="blank"></span><button data-move="left">◀</button><button data-move="back">▼</button><button data-move="right">▶</button></div><div id="panel"><h2 id="panelTitle"></h2><p id="panelText"></p><div class="row" id="panelActions"></div><p><button id="close">CLOSE ✕</button></p></div>
+<div id="message"></div><div id="crosshair">+</div><div id="mobile"><span class="blank"></span><button data-move="forward">▲</button><span class="blank"></span><button data-move="left">◀</button><button data-move="back">▼</button><button data-move="right">▶</button></div><div id="panel"><h2 id="panelTitle"></h2><p id="panelText"></p><div class="row" id="panelActions"></div><p><button id="close">CLOSE ✕</button></p></div>
 <button id="nlcInteract" type="button" hidden>
 INTERACT
 </button>
-<div id="nlcControllerStatus" aria-live="polite">
-🎮 Controller: not connected
-</div>
+<div id="nlcControllerStatus" aria-live="polite" style="display:none"></div>
 <div id="nlcConsole" hidden aria-label="1AGE Console">
     <div id="nlcMove" class="nlc-stick" data-axis="move">
         <span class="nlc-knob"></span>
@@ -840,7 +838,7 @@ label('DJ DECKS',10.5,2.2,-2.2,'#1bfd9c',45);
 label('STUDIO 007',7.5,2.7,-4.5,'#ffffff',45);
 
 const ray=new THREE.Raycaster(),pointer=new THREE.Vector2();let yaw=0,pitch=0,keys={},moveTouch={forward:false,back:false,left:false,right:false},panelOpen=false;const panel=document.getElementById('panel'),actions=document.getElementById('panelActions');
-function show(t){panelOpen=true;document.exitPointerLock?.();panel.style.display='block';document.getElementById('panelTitle').textContent=t.name;document.getElementById('panelText').textContent=t.info;actions.replaceChildren();if(t.action==='studio'||t.action==='dj'){const a=document.createElement('a');a.href=t.action==='studio'?'../studio-007/':'../studio-008/dj.html';a.target='_blank';a.rel='noopener';a.textContent=t.action==='studio'?'🎹 OPEN STUDIO':'🎧 OPEN DJ BOOTH';actions.append(a)}if(t.action==='radio'){const b=document.createElement('button');b.textContent='🎵 CHOOSE AUDIO FILE';b.onclick=()=>file.click();actions.append(b)}}
+function show(t){if(t.action==='studio'){location.assign('../studio-007/');return;}if(t.action==='dj'){location.assign('../studio-008/dj.html');return;}if(t.action==='radio'){document.exitPointerLock?.();file.click();}}
 document.getElementById('close').onclick=()=>{panel.style.display='none';panelOpen=false};
 
 function nlcNearbyDoor(){
@@ -922,8 +920,8 @@ document.addEventListener('keydown',e=>{if(['KeyW','KeyA','KeyS','KeyD','ArrowUp
 for(const b of document.querySelectorAll('[data-move]')){const k=b.dataset.move;b.addEventListener('pointerdown',e=>{e.preventDefault();moveTouch[k]=true;b.setPointerCapture(e.pointerId)});for(const ev of ['pointerup','pointercancel'])b.addEventListener(ev,()=>moveTouch[k]=false)}
 let dragging=false,lastX=0,lastY=0;renderer.domElement.addEventListener('touchstart',e=>{if(e.touches.length===1){dragging=true;lastX=e.touches[0].clientX;lastY=e.touches[0].clientY}},{passive:true});renderer.domElement.addEventListener('touchmove',e=>{if(dragging&&e.touches.length===1){const t=e.touches[0];yaw-=(t.clientX-lastX)*.005;pitch=Math.max(-1.25,Math.min(1.25,pitch-(t.clientY-lastY)*.005));lastX=t.clientX;lastY=t.clientY}},{passive:true});renderer.domElement.addEventListener('touchend',()=>dragging=false);
 const file=document.createElement('input');file.type='file';file.accept='audio/*';file.style.display='none';document.body.append(file);const audio=document.getElementById('player');let objectURL=null;file.onchange=()=>{const f=file.files[0];if(!f)return;if(objectURL)URL.revokeObjectURL(objectURL);objectURL=URL.createObjectURL(f);audio.src=objectURL;audio.play().then(()=>document.getElementById('radio').textContent='❚❚ RADIO').catch(()=>{});document.getElementById('panelText').textContent='Playing locally: '+f.name+' (not broadcast to other visitors).'};
-document.getElementById('radio').onclick=()=>{if(!audio.src){show({name:'Café Radio',info:'Select an audio file from your device to play locally. This demo does not stream to other visitors.',action:'radio'});return}if(audio.paused){audio.play();document.getElementById('radio').textContent='❚❚ RADIO'}else{audio.pause();document.getElementById('radio').textContent='▶ RADIO'}};let volume=.7;audio.volume=volume;document.getElementById('sound').onclick=()=>{volume=volume===0?.35:volume===.35?.7:volume===.7?1:0;audio.volume=volume;document.getElementById('sound').textContent='🔊 '+Math.round(volume*100)+'%'};
-document.getElementById('help').onclick=()=>show({name:'Explore NorthLeftChef',info:'WASD to walk, mouse to look, E to interact with nearby equipment. On touchscreens, swipe the scene to look, use arrows to walk, and tap equipment. The café and studio are connected through the green doorway.'});
+document.getElementById('radio').onclick=()=>{if(!audio.src){file.click();return}if(audio.paused){audio.play();document.getElementById('radio').textContent='❚❚ RADIO'}else{audio.pause();document.getElementById('radio').textContent='▶ RADIO'}};let volume=.7;audio.volume=volume;document.getElementById('sound').onclick=()=>{volume=volume===0?.35:volume===.35?.7:volume===.7?1:0;audio.volume=volume;document.getElementById('sound').textContent='🔊 '+Math.round(volume*100)+'%'};
+
 
 // NLC Console input adapter
 const nlcPad={
